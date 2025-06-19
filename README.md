@@ -1,7 +1,4 @@
-# Verdant Frontend (verdant-fe)
-
-A modern Next.js frontend application integrated with Storyblok CMS for content management. This project uses the latest Next.js 15 with App Router, React 19, and Tailwind CSS 4 for styling.
-
+# Next.js with Storyblok - Starter code
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -15,8 +12,8 @@ A modern Next.js frontend application integrated with Storyblok CMS for content 
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
-   cd verdant-fe
+   git clone https://github.com/Jonatan-Vahlberg-WAS/nextjs-storyblok-starter.git <your-project-name>
+   cd <your-project-name>
    ```
 
 2. **Install dependencies**
@@ -45,16 +42,20 @@ A modern Next.js frontend application integrated with Storyblok CMS for content 
    ```
 
 4. **Start Development Server**
+We use Turbopack for faster development and HTTPS for local development. That way we can use the Storyblok preview mode while not having to use a proxy. to do this we use the experimental-https flag as seen below anf found in the package.json file.
+    ```bash
+    npm run dev --experimental-https
+    ```
 
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   # or
-   pnpm dev
-   # or
-   bun dev
-   ```
+    ```bash
+    npm run dev
+    # or
+    yarn dev
+    # or
+    pnpm dev
+    # or
+    bun dev
+    ```
 
    The application will be available at [http://localhost:3000](http://localhost:3000)
 
