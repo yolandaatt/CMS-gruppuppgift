@@ -4,13 +4,14 @@ import Page from '@/components/sb/Page';
 import Teaser from '@/components/sb/Teaser';
 import Feature from '@/components/sb/Feature';
 import Grid from '@/components/sb/Grid';
-
-const components = {
+import DoesNotExist from '@/components/sb/DoesNotExist';
+export const components = {
     // Add your components here
     page: Page,
     feature: Feature,
     grid: Grid,
-    teaser: Teaser
+    teaser: Teaser,
+    doesNotExist: DoesNotExist
   };
 
   /**
