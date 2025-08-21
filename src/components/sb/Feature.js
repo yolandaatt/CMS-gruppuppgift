@@ -4,8 +4,8 @@ import ServerComponent from "./ServerComponent";
 export default function Feature({ blok }) {
   return (
     <div
-      className="feature shadow-md p-4 rounded-md w-75"
       {...storyblokEditable(blok)}
+      className="feature shadow-md p-4 rounded-md w-75"
     >
       <img
         src={`https://picsum.photos/250/250?random=${blok._uid}`}

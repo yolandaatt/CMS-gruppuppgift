@@ -6,7 +6,7 @@ import ServerComponent from './ServerComponent';
     
     export default function Page({ blok }) {
     return (
-        <main>
+        <main {...storyblokEditable(blok)}>
             {blok.body.map((nestedBlok) => (
                 <ServerComponent blok={nestedBlok} key={nestedBlok._uid} />
             ))}
