@@ -2,7 +2,6 @@ import { storyblokEditable } from "@storyblok/react";
 import ServerComponent from "./ServerComponent";
 
 export default function Grid({ blok }) {
-  console.log(blok);
   return (
     <div
       {...storyblokEditable(blok)}
