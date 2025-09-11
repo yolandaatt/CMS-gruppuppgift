@@ -1,5 +1,3 @@
-import fs from "fs";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -7,16 +5,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**", 
+        hostname: "**",
       },
     ],
-  },
-
-  server: {
-    https: {
-      key: fs.readFileSync("./localhost-key.pem"),
-      cert: fs.readFileSync("./localhost.pem"),
-    },
   },
 };
 

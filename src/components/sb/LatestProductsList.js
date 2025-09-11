@@ -14,12 +14,23 @@ export default function LatestProductsList({ blok }) {
         const storyblokApi = getStoryblokApi();
         const { data } = await storyblokApi.get("cdn/stories", {
           starts_with: "products/",
-          version: "draft", // eller "published" om du vill visa publicerade
+          version: "draft", 
           sort_by: "first_published_at:desc",
-          per_page: blok?.limit || 3,
+          per_page: 100,
         });
 
-        setProducts(data?.stories || []);
+        const validProducts = (data?.stories || [])
+          .filter((story) => {
+            const content = story.content;
+            return (
+              content?.title &&
+              content?.image?.filename &&
+              story.slug !== "products"
+            );
+          })
+          .slice(0, blok?.limit || 3);
+
+        setProducts(validProducts);
       } catch (err) {
         console.error("Error fetching products:", err);
         setError(err);

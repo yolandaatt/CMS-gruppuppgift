@@ -1,32 +1,23 @@
-import { getStoryblokApi } from "@storyblok/react/rsc";
-import Image from "next/image";
+"use client";
 
-export const revalidate = 60;
+import { storyblokEditable, renderRichText } from "@storyblok/react/rsc";
 
-export default async function AboutPage() {
-  const storyblokApi = getStoryblokApi();
-  const { data } = await storyblokApi.get("cdn/stories/about", {
-    version: "published",
-  });
-
-  const blok = data?.story?.content;
-
+export default function AboutText({ blok }) {
   return (
-    <main className="max-w-6xl mx-auto px-6 py-12">
-      
-      <section className="text-center mb-16">
-        <h1 className="text-4xl font-bold mb-6">{blok.title || "About us"}</h1>
-        <div className="prose mx-auto text-gray-600">
-          {blok.description}
-        </div>
-      </section>
+    <section
+      {...storyblokEditable(blok)}
+      className="bg-gray-200 p-6 rounded-xl mb-16 text-center"
+    >
+      {blok.title && (
+        <h2 className="text-2xl font-bold mb-4">{blok.title}</h2>
+      )}
 
-     
-      <section className="bg-gray-200 h-40 rounded-xl mb-16 flex items-center justify-center">
-        <span className="text-gray-500">{blok.image_banner}</span>
-      </section>
-
-     
-    </main>
+      {blok.text && (
+        <div
+          className="prose text-gray-700 mx-auto"
+          dangerouslySetInnerHTML={{ __html: renderRichText(blok.text) }}
+        />
+      )}
+    </section>
   );
 }

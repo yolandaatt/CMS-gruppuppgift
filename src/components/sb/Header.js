@@ -4,20 +4,6 @@ import Link from "next/link";
 export default function Header() {
   return (
     <header>
-      {/* Topbar */}
-      <div className="w-full bg-black text-white text-[15px] font-medium tracking-[-0.03em]">
-        <div className="mx-auto max-w-[1400px] h-[45px] flex items-center justify-between px-6">
-          {/* Vänster */}
-          <span>SWE</span>
-
-          {/* Mitten */}
-          <span>Välkommen till Quitters Never Win</span>
-
-          {/* Höger */}
-          <span>QNW</span>
-        </div>
-      </div>
-
       {/* Main nav */}
       <div className="w-full bg-[#EFF2F6] border-b border-black/50">
         <div className="mx-auto max-w-[1400px] h-[60px] flex items-center justify-between px-6">
