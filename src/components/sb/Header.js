@@ -30,6 +30,11 @@ export default function Header() {
           <nav>
             <ul className="flex items-center gap-8 text-[15px] font-medium tracking-[-0.03em] text-gray-900">
               <li>
+                <Link href="/" className="hover:opacity-70">
+                  Home
+                </Link>
+              </li>
+              <li>
                 <Link href="/products" className="hover:opacity-70">
                   Products
                 </Link>
@@ -38,7 +43,7 @@ export default function Header() {
                 <Link href="/about" className="hover:opacity-70">
                   About
                 </Link>
-              </li>
+              </li>  
             </ul>
           </nav>
 
@@ -91,7 +96,6 @@ export default function Header() {
                 />
               </svg>
               <span className="absolute -top-2 -right-2 grid h-5 w-5 place-items-center rounded-full bg-black text-[11px] text-white">
-                3
               </span>
             </button>
           </div>

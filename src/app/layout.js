@@ -39,7 +39,6 @@ export default async function RootLayout({ children }) {
       <body className="min-h-screen flex flex-col bg-gray-50 text-gray-900 font-sans antialiased">
         <Header navigation={navigation} />
 
-        {/* MAIN */}
         <main className="flex-1 container mx-auto px-6 py-10">
           {children}
         </main>

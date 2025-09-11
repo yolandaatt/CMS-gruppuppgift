@@ -7,7 +7,7 @@ import { renderRichText } from "@storyblok/react";
 export default function ProductDetails({ blok }) {
   return (
     <div className="bg-white shadow-lg rounded-2xl p-8 flex flex-col md:flex-row gap-8">
-      {/* Produktbild */}
+
       {blok.image?.filename ? (
         <div className="flex-shrink-0 w-full md:w-1/2">
           <Image
@@ -24,14 +24,13 @@ export default function ProductDetails({ blok }) {
         </div>
       )}
 
-      {/* Produktinfo */}
       <div className="flex-1 flex flex-col">
         <h1 className="text-3xl font-bold mb-4">{blok.title}</h1>
         <p className="text-2xl text-green-600 font-semibold mb-6">
           {blok.price} kr
         </p>
 
-        {/* Produktbeskrivning */}
+
         {blok.description && (
           <div
             className="prose max-w-none mb-6"
@@ -41,7 +40,6 @@ export default function ProductDetails({ blok }) {
           />
         )}
 
-        {/* Knappsektion */}
         <div className="flex flex-col gap-3 mt-auto">
           <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
             Lägg i kundvagn

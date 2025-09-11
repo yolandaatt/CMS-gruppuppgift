@@ -18,12 +18,11 @@ export default async function ProductsPage() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-12">
-      {/* Rubrik */}
+   
       <h1 className="text-3xl font-bold mb-8 text-center">
         Våra senaste produkter
       </h1>
 
-      {/* Produktgrid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {products.map((product) => {
           const { title, price, image } = product.content;
@@ -33,8 +32,7 @@ export default async function ProductsPage() {
               key={product.uuid}
               href={`/products/${product.slug.replace("products/", "")}`}
               className="border rounded-lg shadow hover:shadow-lg transition overflow-hidden bg-white"
-            >
-              {/* Bild */}
+            >  
               {image && (
                 <Image
                   src={image.filename}
@@ -45,7 +43,6 @@ export default async function ProductsPage() {
                 />
               )}
 
-              {/* Info */}
               <div className="p-4">
                 <h2 className="text-lg font-semibold mb-2">{title}</h2>
                 <p className="text-gray-600 mb-4">{price} kr</p>

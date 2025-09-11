@@ -6,7 +6,6 @@ export default function NavItem({ blok }) {
   const label = blok?.label || blok?.name || "Link";
   const link = blok?.link;
 
-  // Storybloks Multilink kan vara intern (story) eller extern url
   const href =
     (link?.cached_url && `/${link.cached_url}`) ||
     link?.url ||

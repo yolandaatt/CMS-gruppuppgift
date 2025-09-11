@@ -19,7 +19,7 @@ export default function ProductsGrid({ products }) {
             href={`/${product.full_slug}`}
             className="group border rounded-xl overflow-hidden shadow hover:shadow-lg transition bg-white"
           >
-            {/* Bild */}
+       
             {image?.filename ? (
               <div className="relative w-full h-56">
                 <Image
@@ -35,7 +35,7 @@ export default function ProductsGrid({ products }) {
               </div>
             )}
 
-            {/* Info */}
+        
             <div className="p-4">
               <h2 className="text-lg font-semibold mb-1">{title}</h2>
               {price && <p className="text-gray-700 font-medium">{price} kr</p>}
