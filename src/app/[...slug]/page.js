@@ -8,10 +8,10 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const dynamicParams = true;
 
-export default async function Page({ params: { slug }, searchParams }) {
+export default async function SafePage({ params: { slug }, searchParams }) {
   try {
     const realSlug = slug?.join("/") || "home";
-    console.log("👉 Försöker ladda slug:", realSlug);
+    console.log("👉 Laddar slug:", realSlug);
 
     const isPreview =
       process.env.NODE_ENV === "development" ||
@@ -23,11 +23,11 @@ export default async function Page({ params: { slug }, searchParams }) {
       version: isPreview ? "draft" : "published",
     });
 
-    console.log("📦 Storyblok response:", JSON.stringify(data, null, 2));
+    console.log("📦 Storyblok-data:", data?.story?.name || "ingen story");
 
     const blok = data?.story?.content;
     if (!blok) {
-      console.warn("⚠️ Inget blok hittades för slug:", realSlug);
+      console.warn("⚠️ Ingen content hittades för slug:", realSlug);
       return (
         <main className="p-8 text-center">
           <h1>Innehåll saknas</h1>
@@ -55,7 +55,7 @@ export default async function Page({ params: { slug }, searchParams }) {
     return (
       <main className="p-8 text-center">
         <h1>Kunde inte ladda sidan</h1>
-        <pre>{error.message}</pre>
+        <p>{error.message}</p>
       </main>
     );
   }
