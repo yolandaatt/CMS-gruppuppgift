@@ -21,9 +21,8 @@ export async function generateStaticParams() {
       if (link.is_folder) return false;
       if (!link.slug) return false;
 
-      const excluded = ["config", "home", "not-found", "_not-found"];
+      const excluded = ["config", "home"];
       if (excluded.includes(link.slug)) return false;
-      if (link.slug.includes("not-found")) return false;
 
       return true;
     })
@@ -47,10 +46,12 @@ export default async function Page({ params: { slug }, searchParams }) {
     });
 
     const blok = data?.story?.content;
+
     if (!blok) {
       return (
-        <main>
-          <h1>Sidan hittades inte</h1>
+        <main className="p-8 text-center">
+          <h1>Innehåll saknas</h1>
+          <p>Vi kunde inte ladda sidan.</p>
         </main>
       );
     }
@@ -58,14 +59,12 @@ export default async function Page({ params: { slug }, searchParams }) {
     const Component = components[blok.component];
     if (!Component) {
       return (
-        <main>
-          <h1>Okänt komponenttyp</h1>
+        <main className="p-8 text-center">
+          <h1>Okänd komponent</h1>
+          <p>Kontakta administratören om felet kvarstår.</p>
         </main>
       );
     }
-
-    console.log("→ Blok content:", blok);
-    console.log("→ component:", blok.component);
 
     return (
       <main {...storyblokEditable(blok)}>
@@ -75,7 +74,7 @@ export default async function Page({ params: { slug }, searchParams }) {
   } catch (error) {
     console.error("Storyblok error:", error);
     return (
-      <main>
+      <main className="p-8 text-center">
         <h1>Kunde inte ladda sidan</h1>
         <p>Försök igen senare.</p>
       </main>
