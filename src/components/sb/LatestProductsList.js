@@ -1,0 +1,56 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { getStoryblokApi } from "@storyblok/react/rsc";
+import Link from "next/link";
+
+export default function LatestProductsList({ blok }) {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      const storyblokApi = getStoryblokApi();
+      const { data } = await storyblokApi.get("cdn/stories", {
+        starts_with: "products/",
+        version: "draft",
+        sort_by: "first_published_at:desc",
+        per_page: blok.limit || 3,
+      });
+
+      setProducts(data.stories);
+    }
+
+    fetchProducts();
+  }, [blok.limit]);
+
+  return (
+    <section className="py-12 px-4">
+      <h2 className="text-3xl font-bold mb-6">{blok.title || "Produkter"}</h2>
+      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {products.map((story) => (
+          <li key={story.uuid} className="border rounded-lg p-4 shadow">
+            {story.content?.image?.filename && (
+              <img
+                src={story.content.image.filename}
+                alt={story.content.image.alt || story.name}
+                className="mb-4 rounded"
+              />
+            )}
+            <h3 className="text-xl font-semibold">{story.content.title}</h3>
+            {story.content.price && (
+              <p className="text-sm text-gray-600 mb-2">
+                {story.content.price} kr
+              </p>
+            )}
+            <Link
+              href={`/${story.full_slug}`}
+              className="text-blue-500 hover:underline"
+            >
+              Läs mer →
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}

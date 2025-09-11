@@ -1,30 +1,40 @@
-import { apiPlugin, storyblokInit } from '@storyblok/react/rsc';
+import { storyblokInit, apiPlugin, getStoryblokApi } from "@storyblok/react/rsc";
+import Page from "@/components/sb/Page";
 
-import Page from '@/components/sb/Page';
-import Teaser from '@/components/sb/Teaser';
-import Feature from '@/components/sb/Feature';
-import Grid from '@/components/sb/Grid';
-import DoesNotExist from '@/components/sb/DoesNotExist';
-import Hero from '@/components/sb/Hero';
+import Hero from "@/components/sb/Hero";
+import NavItem from "@/components/sb/NavItem";
+import ImageBanner from "@/components/sb/ImageBanner";
+import ImageWithText from "@/components/sb/ImageWithText";
+import LatestProductsList from "@/components/sb/LatestProductsList";
+import ProductDetails from "@/components/sb/ProductDetails";
+import AboutText from "@/components/sb/AboutText";
+
+import DoesNotExist from "@/components/sb/DoesNotExist";
+
 export const components = {
-    // Add your components here
-    page: Page,
-    feature: Feature,
-    grid: Grid,
-    teaser: Teaser,
-    hero: Hero,
-    doesNotExist: DoesNotExist
-  };
+  Page,
+  page: Page,
+  ProductPage: ProductDetails,
+  Layout: Page,
 
-  /**
-   * Get the Storyblok API exports a StoryblokApi object to be used in the application
-   * @returns {StoryblokApi}
-   */
-  export const getStoryblokApi = storyblokInit({
-	accessToken: process.env.STORYBLOK_DELIVERY_API_ACCESS_TOKEN || process.env.NEXT_PUBLIC_STORYBLOK_DELIVERY_API_ACCESS_TOKEN,
-	use: [apiPlugin],
-	apiOptions: {
-		region: 'eu',
-	},
-    components
-});
+  hero: Hero,
+  image_banner: ImageBanner,
+  navItem: NavItem,
+  image_with_text: ImageWithText,
+  latest_products_list: LatestProductsList,
+  product_details: ProductDetails,
+  about_text: AboutText,
+
+};
+
+let inited = false;
+export function initStoryblok() {
+  if (inited) return;
+  storyblokInit({
+    accessToken: process.env.NEXT_PUBLIC_STORYBLOK_DELIVERY_API_ACCESS_TOKEN,
+    use: [apiPlugin], 
+    apiOptions: { region: "eu" },
+    components,
+  });
+  inited = true;
+}
