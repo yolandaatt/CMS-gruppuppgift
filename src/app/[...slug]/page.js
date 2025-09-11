@@ -8,7 +8,37 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const dynamicParams = true;
 
-export default async function SafePage({ params: { slug }, searchParams }) {
+// 🔎 Bygger statiska sidor utifrån Storyblok
+export async function generateStaticParams() {
+  const storyblokApi = getStoryblokApi();
+  const { data } = await storyblokApi.get("cdn/links/", {
+    version: "published",
+  });
+
+  const links = Object.values(data.links);
+
+  const params = links
+    .filter((link) => {
+      if (link.is_folder) return false;
+      if (!link.slug) return false;
+
+      // 🚫 Släng bort allt relaterat till not-found
+      const excluded = ["config", "home", "not-found", "_not-found"];
+      if (excluded.includes(link.slug)) return false;
+      if (link.slug.includes("not-found")) return false;
+
+      return true;
+    })
+    .map((link) => ({
+      slug: link.slug.split("/"),
+    }));
+
+  console.log("✅ Static params:", params);
+  return params;
+}
+
+// 🔎 Dynamisk sida
+export default async function Page({ params: { slug }, searchParams }) {
   try {
     const realSlug = slug?.join("/") || "home";
     console.log("👉 Laddar slug:", realSlug);
@@ -23,7 +53,7 @@ export default async function SafePage({ params: { slug }, searchParams }) {
       version: isPreview ? "draft" : "published",
     });
 
-    console.log("📦 Storyblok-data:", data?.story?.name || "ingen story");
+    console.log("📦 Story data:", data?.story?.name || "Ingen story hittades");
 
     const blok = data?.story?.content;
     if (!blok) {
