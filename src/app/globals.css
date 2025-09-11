@@ -4,4 +4,4 @@
 /* Testfärg för att se om det funkar */
 body {
   @apply bg-gray-100 text-gray-900;
-}
+} 
