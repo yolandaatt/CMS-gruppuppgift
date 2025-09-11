@@ -29,28 +29,28 @@ export default async function RootLayout({ children }) {
   }
 
   return (
-    <StoryBlokProvider>
       <html lang="en">
-        <body>
-          <header className="border-b p-4">
-            <nav className="container mx-auto flex gap-6">
-              {navigation.map((item) => (
-                <ServerComponent blok={item} key={item._uid} />
-              ))}
-            </nav>
-          </header>
+  <body>
+    <StoryBlokProvider>
+      <header className="border-b p-4">
+        <nav className="container mx-auto flex gap-6">
+          {navigation.map((item) => (
+            <ServerComponent blok={item} key={item._uid} />
+          ))}
+        </nav>
+      </header>
 
-          <main>{children}</main>
+      <main>{children}</main>
 
-          <footer className="border-t p-6 text-sm">
-            <div className="container mx-auto flex gap-4 flex-wrap">
-              {footerLinks.map((item) => (
-                <ServerComponent blok={item} key={item._uid} />
-              ))}
-            </div>
-          </footer>
-        </body>
-      </html>
+      <footer className="border-t p-6 text-sm">
+        <div className="container mx-auto flex gap-4 flex-wrap">
+          {footerLinks.map((item) => (
+            <ServerComponent blok={item} key={item._uid} />
+          ))}
+        </div>
+      </footer>
     </StoryBlokProvider>
+  </body>
+</html>
   );
 }
