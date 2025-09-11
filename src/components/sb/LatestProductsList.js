@@ -6,26 +6,54 @@ import Link from "next/link";
 
 export default function LatestProductsList({ blok }) {
   const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchProducts() {
-      const storyblokApi = getStoryblokApi();
-      const { data } = await storyblokApi.get("cdn/stories", {
-        starts_with: "products/",
-        version: "draft",
-        sort_by: "first_published_at:desc",
-        per_page: blok.limit || 3,
-      });
+      try {
+        const storyblokApi = getStoryblokApi();
+        const { data } = await storyblokApi.get("cdn/stories", {
+          starts_with: "products/",
+          version: "draft", // eller "published" om du vill visa publicerade
+          sort_by: "first_published_at:desc",
+          per_page: blok?.limit || 3,
+        });
 
-      setProducts(data.stories);
+        setProducts(data?.stories || []);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setError(err);
+      }
     }
 
     fetchProducts();
-  }, [blok.limit]);
+  }, [blok?.limit]);
+
+  if (error) {
+    return (
+      <section className="py-12 px-4">
+        <h2 className="text-3xl font-bold mb-6">
+          {blok?.title || "Produkter"}
+        </h2>
+        <p className="text-red-500">Kunde inte ladda produkter.</p>
+      </section>
+    );
+  }
+
+  if (!products.length) {
+    return (
+      <section className="py-12 px-4">
+        <h2 className="text-3xl font-bold mb-6">
+          {blok?.title || "Produkter"}
+        </h2>
+        <p>Inga produkter tillgängliga just nu.</p>
+      </section>
+    );
+  }
 
   return (
     <section className="py-12 px-4">
-      <h2 className="text-3xl font-bold mb-6">{blok.title || "Produkter"}</h2>
+      <h2 className="text-3xl font-bold mb-6">{blok?.title || "Produkter"}</h2>
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {products.map((story) => (
           <li key={story.uuid} className="border rounded-lg p-4 shadow">
@@ -36,8 +64,10 @@ export default function LatestProductsList({ blok }) {
                 className="mb-4 rounded"
               />
             )}
-            <h3 className="text-xl font-semibold">{story.content.title}</h3>
-            {story.content.price && (
+            <h3 className="text-xl font-semibold">
+              {story.content?.title || story.name}
+            </h3>
+            {story.content?.price && (
               <p className="text-sm text-gray-600 mb-2">
                 {story.content.price} kr
               </p>

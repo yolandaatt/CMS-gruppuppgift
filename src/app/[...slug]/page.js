@@ -8,32 +8,10 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const dynamicParams = true;
 
-export async function generateStaticParams() {
-  const storyblokApi = getStoryblokApi();
-  const { data } = await storyblokApi.get("cdn/links/", {
-    version: "published",
-  });
-
-  const links = Object.values(data.links);
-
-  return links
-    .filter((link) => {
-      if (link.is_folder) return false;
-      if (!link.slug) return false;
-
-      const excluded = ["config", "home"];
-      if (excluded.includes(link.slug)) return false;
-
-      return true;
-    })
-    .map((link) => ({
-      slug: link.slug.split("/"),
-    }));
-}
-
 export default async function Page({ params: { slug }, searchParams }) {
   try {
     const realSlug = slug?.join("/") || "home";
+    console.log("👉 Försöker ladda slug:", realSlug);
 
     const isPreview =
       process.env.NODE_ENV === "development" ||
@@ -45,23 +23,24 @@ export default async function Page({ params: { slug }, searchParams }) {
       version: isPreview ? "draft" : "published",
     });
 
-    const blok = data?.story?.content;
+    console.log("📦 Storyblok response:", JSON.stringify(data, null, 2));
 
+    const blok = data?.story?.content;
     if (!blok) {
+      console.warn("⚠️ Inget blok hittades för slug:", realSlug);
       return (
         <main className="p-8 text-center">
           <h1>Innehåll saknas</h1>
-          <p>Vi kunde inte ladda sidan.</p>
         </main>
       );
     }
 
     const Component = components[blok.component];
     if (!Component) {
+      console.warn("⚠️ Okänd komponent:", blok.component);
       return (
         <main className="p-8 text-center">
-          <h1>Okänd komponent</h1>
-          <p>Kontakta administratören om felet kvarstår.</p>
+          <h1>Okänd komponent: {blok.component}</h1>
         </main>
       );
     }
@@ -72,11 +51,11 @@ export default async function Page({ params: { slug }, searchParams }) {
       </main>
     );
   } catch (error) {
-    console.error("Storyblok error:", error);
+    console.error("💥 Storyblok error:", error);
     return (
       <main className="p-8 text-center">
         <h1>Kunde inte ladda sidan</h1>
-        <p>Försök igen senare.</p>
+        <pre>{error.message}</pre>
       </main>
     );
   }
