@@ -9,7 +9,7 @@ export default function Header() {
         <div className="mx-auto max-w-[1400px] h-[60px] flex items-center justify-between px-6">
           {/* Vänster: brand */}
           <div className="text-[15px] font-semibold tracking-[-0.03em]">
-            Quitters never win - QNW
+            QNW
           </div>
 
           {/* Mitten: navigation */}

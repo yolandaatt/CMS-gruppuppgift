@@ -9,19 +9,30 @@ export default async function ProductsPage() {
   initStoryblok();
 
   const storyblokApi = getStoryblokApi();
-  const { data } = await storyblokApi.get("cdn/stories", {
+
+  const { data: overviewData } = await storyblokApi.get("cdn/stories/products", {
+    version: "published",
+  });
+
+  const pageTitle = overviewData?.story?.content?.title || "Produkter";
+
+  const { data: productData } = await storyblokApi.get("cdn/stories", {
     version: "published",
     starts_with: "products/",
   });
 
-  const products = data.stories || [];
+  const products = (productData.stories || []).filter((product) => {
+  const slug = product.slug;
+  const fullSlug = product.full_slug;
+
+  return slug !== "products" && fullSlug !== "products" && fullSlug !== "products/";
+});
+
+
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-12">
-   
-      <h1 className="text-3xl font-bold mb-8 text-center">
-        Våra senaste produkter
-      </h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">{pageTitle}</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {products.map((product) => {
@@ -32,7 +43,7 @@ export default async function ProductsPage() {
               key={product.uuid}
               href={`/products/${product.slug.replace("products/", "")}`}
               className="border rounded-lg shadow hover:shadow-lg transition overflow-hidden bg-white"
-            >  
+            >
               {image && (
                 <Image
                   src={image.filename}
