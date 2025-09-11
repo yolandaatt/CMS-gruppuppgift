@@ -1,41 +1,53 @@
+"use client";
+
+
 import { storyblokEditable, renderRichText } from "@storyblok/react";
-import Link from "next/link";
+
 
 export default function Hero({ blok }) {
-  const align = blok.align?.toLowerCase() || "center";
-  const textColor = blok.text_color?.toLowerCase() === "dark" ? "text-black" : "text-white";
+return (
+<section className="bg-[#EFF2F6]" {...storyblokEditable(blok)}>
+<div className="mx-auto max-w-[1400px] flex flex-col items-center text-center py-16">
 
-  return (
-    <section
-      {...storyblokEditable(blok)}
-      className={`h-[60vh] flex items-center justify-${align} px-8`}
-      style={{
-        backgroundColor: blok.background_color?.color,
-        backgroundImage: blok.media?.filename
-          ? `url(${blok.media.filename})`
-          : undefined,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className={`max-w-3xl text-center ${textColor}`}>
-  <h1 className="text-4xl font-bold mb-2">{blok.title}</h1>
 
-  {blok.subtitle && (
-    <div className={`text-lg mb-4 prose ${textColor === "text-white" ? "prose-invert" : ""}`}>
-      {renderRichText(blok.subtitle)}
-    </div>
-  )}
+{/* Titel */}
+{blok.title && (
+<h1 className="text-[56px] font-semibold leading-[62px] text-black">
+{blok.title}
+</h1>
+)}
 
-  {blok.cta?.cached_url && blok.cta_label && (
-    <Link
-      href={`/${blok.cta.cached_url}`}
-      className="inline-block mt-4 px-6 py-2 bg-white text-black rounded hover:bg-gray-200 transition"
-    >
-      {blok.cta_label}
-    </Link>
-  )}
+
+{/* Subtitle */}
+{blok.subtitle && (
+<div className="mt-4 max-w-[610px] text-[20px] leading-[28px] text-[#979797]">
+{renderRichText(blok.subtitle)}
 </div>
-    </section>
-  );
+)}
+
+
+{/* Knapp */}
+{blok.button_text && (
+<a
+href={blok.button_link?.url || "#"}
+className="mt-8 h-[50px] w-[194px] border border-black text-black font-medium text-[15px] flex items-center justify-center hover:bg-black hover:text-white"
+>
+{blok.button_text}
+</a>
+)}
+
+
+{/* Bild */}
+{blok.image?.filename ? (
+<img
+src={blok.image.filename}
+alt={blok.image.alt || "Hero image"}
+className="mt-10 w-[1114px] h-[521px] object-cover"
+/>
+) : (
+<div className="mt-10 w-[1114px] h-[521px] bg-gray-300" />
+)}
+</div>
+</section>
+);
 }

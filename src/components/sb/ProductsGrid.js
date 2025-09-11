@@ -1,32 +1,48 @@
-// src/components/sb/ProductsGrid.js
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
 
 export default function ProductsGrid({ products }) {
+  if (!products || products.length === 0) {
+    return <p className="text-gray-500">Inga produkter hittades.</p>;
+  }
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {products.map((story) => (
-        <div key={story.uuid} className="border rounded-lg p-4 shadow">
-          {story.content?.image?.filename && (
-            <img
-              src={story.content.image.filename}
-              alt={story.content.image.alt || story.name}
-              className="mb-4 rounded"
-            />
-          )}
-          <h3 className="text-xl font-semibold">{story.content.title}</h3>
-          {story.content.price && (
-            <p className="text-sm text-gray-600 mb-2">
-              {story.content.price} kr
-            </p>
-          )}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 p-6">
+      {products.map((product) => {
+        const { title, price, image } = product.content;
+
+        return (
           <Link
-            href={`/${story.full_slug}`}
-            className="text-blue-500 hover:underline"
+            key={product.uuid}
+            href={`/${product.full_slug}`}
+            className="group border rounded-xl overflow-hidden shadow hover:shadow-lg transition bg-white"
           >
-            Läs mer →
+            {/* Bild */}
+            {image?.filename ? (
+              <div className="relative w-full h-56">
+                <Image
+                  src={image.filename}
+                  alt={title || "Produktbild"}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            ) : (
+              <div className="w-full h-56 bg-gray-200 flex items-center justify-center text-gray-500">
+                Ingen bild
+              </div>
+            )}
+
+            {/* Info */}
+            <div className="p-4">
+              <h2 className="text-lg font-semibold mb-1">{title}</h2>
+              {price && <p className="text-gray-700 font-medium">{price} kr</p>}
+            </div>
           </Link>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

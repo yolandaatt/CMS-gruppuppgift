@@ -1,40 +1,39 @@
 import { getStoryblokApi } from "@storyblok/react/rsc";
-import ServerComponent from "@/components/sb/ServerComponent";
-import { initStoryblok } from "@/lib/storyblok";
+import { components, initStoryblok } from "@/lib/storyblok";
+import { storyblokEditable } from "@storyblok/react";
 
 export default async function Home() {
   initStoryblok();
 
   const api = getStoryblokApi();
+  const { data } = await api.get("cdn/stories/home", {
+    version: "draft",
+  });
 
-  try {
-    const { data } = await api.get("cdn/stories/home", {
-      version: "draft",
-    });
+  const blok = data?.story?.content;
 
-    const content = data?.story?.content;
-
-    if (!content) {
-      return (
-        <div>
-          <h1>Innehåll saknas</h1>
-          <p>Vi kunde inte ladda startsidan just nu.</p>
-        </div>
-      );
-    }
-
+  if (!blok) {
     return (
       <div>
-        <ServerComponent blok={content} />
-      </div>
-    );
-  } catch (error) {
-    console.error("Error loading home story:", error);
-    return (
-      <div>
-        <h1>Kunde inte ladda startsidan</h1>
-        <p>Försök igen senare.</p>
+        <h1>Innehåll saknas</h1>
+        <p>Vi kunde inte ladda startsidan just nu.</p>
       </div>
     );
   }
+
+  const Component = components[blok.component];
+
+  if (!Component) {
+    return (
+      <div>
+        <h1>Okänd komponent: {blok.component}</h1>
+      </div>
+    );
+  }
+
+  return (
+    <main {...storyblokEditable(blok)}>
+      <Component blok={blok} />
+    </main>
+  );
 }

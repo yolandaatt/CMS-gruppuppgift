@@ -1,34 +1,60 @@
-import { storyblokEditable, renderRichText } from "@storyblok/react";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { renderRichText } from "@storyblok/react";
 
 export default function ProductDetails({ blok }) {
   return (
-    <section {...storyblokEditable(blok)} className="py-12 px-4 max-w-4xl mx-auto">
-      <div className="grid md:grid-cols-2 gap-8 items-start">
-        {blok.image?.filename && (
+    <div className="bg-white shadow-lg rounded-2xl p-8 flex flex-col md:flex-row gap-8">
+      {/* Produktbild */}
+      {blok.image?.filename ? (
+        <div className="flex-shrink-0 w-full md:w-1/2">
           <Image
             src={blok.image.filename}
-            alt={blok.alt || blok.title || "Produktbild"}
+            alt={blok.title || "Produktbild"}
             width={600}
-            height={400}
-            className="rounded shadow"
+            height={600}
+            className="rounded-xl object-cover w-full h-full"
+          />
+        </div>
+      ) : (
+        <div className="w-full md:w-1/2 bg-gray-100 rounded-xl flex items-center justify-center">
+          <span className="text-gray-400">Ingen bild</span>
+        </div>
+      )}
+
+      {/* Produktinfo */}
+      <div className="flex-1 flex flex-col">
+        <h1 className="text-3xl font-bold mb-4">{blok.title}</h1>
+        <p className="text-2xl text-green-600 font-semibold mb-6">
+          {blok.price} kr
+        </p>
+
+        {/* Produktbeskrivning */}
+        {blok.description && (
+          <div
+            className="prose max-w-none mb-6"
+            dangerouslySetInnerHTML={{
+              __html: renderRichText(blok.description),
+            }}
           />
         )}
 
-        <div>
-          <h1 className="text-3xl font-bold mb-4">{blok.title}</h1>
-          <p className="text-xl text-blue-600 mb-4">{blok.price} kr</p>
+        {/* Knappsektion */}
+        <div className="flex flex-col gap-3 mt-auto">
+          <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+            Lägg i kundvagn
+          </button>
 
-          <div className="prose mb-4">
-            {blok.description && renderRichText(blok.description)}
-          </div>
-
-          <Link href="/products" className="text-blue-500 hover:underline">
-            Tillbaka till produkter
+          <Link
+            href="/products"
+            className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg text-center hover:bg-gray-300 transition"
+          >
+            ← Tillbaka till produkter
           </Link>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

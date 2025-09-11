@@ -1,24 +1,62 @@
 import { getStoryblokApi } from "@storyblok/react/rsc";
 import { initStoryblok } from "@/lib/storyblok";
-import ProductsGrid from "@/components/sb/ProductsGrid";
+import Image from "next/image";
+import Link from "next/link";
+
+export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
   initStoryblok();
-  const api = getStoryblokApi();
-  const { data } = await api.get("cdn/stories", {
-    version: process.env.NODE_ENV === "development" ? "draft" : "published",
+
+  const storyblokApi = getStoryblokApi();
+  const { data } = await storyblokApi.get("cdn/stories", {
+    version: "published",
     starts_with: "products/",
   });
 
-  const allProducts = data.stories || [];
-  const filteredProducts = allProducts.filter(
-    (product) => product.content?.component === "ProductPage"
-  );
+  const products = data.stories || [];
 
   return (
-    <section className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Alla produkter</h1>
-      <ProductsGrid products={filteredProducts} />
-    </section>
+    <main className="max-w-7xl mx-auto px-4 py-12">
+      {/* Rubrik */}
+      <h1 className="text-3xl font-bold mb-8 text-center">
+        Våra senaste produkter
+      </h1>
+
+      {/* Produktgrid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {products.map((product) => {
+          const { title, price, image } = product.content;
+
+          return (
+            <Link
+              key={product.uuid}
+              href={`/products/${product.slug.replace("products/", "")}`}
+              className="border rounded-lg shadow hover:shadow-lg transition overflow-hidden bg-white"
+            >
+              {/* Bild */}
+              {image && (
+                <Image
+                  src={image.filename}
+                  alt={image.alt || title}
+                  width={400}
+                  height={300}
+                  className="w-full h-56 object-cover"
+                />
+              )}
+
+              {/* Info */}
+              <div className="p-4">
+                <h2 className="text-lg font-semibold mb-2">{title}</h2>
+                <p className="text-gray-600 mb-4">{price} kr</p>
+                <span className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
+                  Visa produkt
+                </span>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </main>
   );
 }

@@ -1,12 +1,26 @@
+import React from "react";
+import DoesNotExist from "./DoesNotExist";
+import { components } from "@/lib/storyblok";
 
-import { components } from "@/lib/storyblok"
-import { StoryblokServerComponent } from "@storyblok/react/rsc"     
-import DoesNotExist from "./DoesNotExist"
 
 export default function ServerComponent({ blok }) {
-    const Component = components[blok.component];
-    if(!Component) {
-        return <DoesNotExist blok={blok} />
-    }
-    return <StoryblokServerComponent blok={blok} />
+try {
+const Component = components[blok.component];
+
+
+if (!Component) {
+console.warn("⚠️ Okänd komponent:", blok.component);
+return <DoesNotExist blok={blok} />;
+}
+
+
+return <Component blok={blok} />;
+} catch (err) {
+console.error("💥 Fel vid rendering av komponent:", blok.component, err);
+return (
+<div className="text-red-600 p-4">
+Fel vid rendering av <code>{blok.component}</code>
+</div>
+);
+}
 }

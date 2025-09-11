@@ -1,10 +1,12 @@
-import "./globals.css";
+import './globals.css';
+
 
 import { getStoryblokApi } from "@storyblok/react/rsc";
 import { initStoryblok } from "@/lib/storyblok";
 import ServerComponent from "@/components/sb/ServerComponent";
 import StoryBlokProvider from "@/components/StoryBlokProvider";
 import Footer from "@/components/sb/Footer";
+import Header from "@/components/sb/Header";
 
 
 export const dynamic = "force-dynamic";
@@ -30,29 +32,21 @@ export default async function RootLayout({ children }) {
     console.warn("⚠️ Kunde inte ladda config:", e?.message);
   }
 
-  return (
-    <StoryBlokProvider>
-      <html lang="en">
-        <body className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
-          {/* HEADER */}
-          <header className="border-b bg-white">
-            <nav className="container mx-auto flex items-center justify-between py-4 px-6">
-              <div className="font-bold text-lg">Ecommerce</div>
-              <div className="flex gap-6">
-                {navigation.map((item) => (
-                  <ServerComponent blok={item} key={item._uid} />
-                ))}
-              </div>
-            </nav>
-          </header>
+ return (
+  <StoryBlokProvider>
+    <html lang="en">
+      <head /> 
+      <body className="min-h-screen flex flex-col bg-gray-50 text-gray-900 font-sans antialiased">
+        <Header navigation={navigation} />
 
-          {/* MAIN */}
-          <main className="flex-1 container mx-auto px-6 py-10">
-            {children}
-          </main>
-           <Footer />
-        </body>
-      </html>
-    </StoryBlokProvider>
-  );
+        {/* MAIN */}
+        <main className="flex-1 container mx-auto px-6 py-10">
+          {children}
+        </main>
+
+        <Footer />
+      </body>
+    </html>
+  </StoryBlokProvider>
+)
 }

@@ -1,4 +1,5 @@
-import { storyblokInit, apiPlugin, getStoryblokApi } from "@storyblok/react/rsc";
+import { storyblokInit, apiPlugin } from "@storyblok/react/rsc";
+import { getStoryblokApi } from "@storyblok/react"; // ✅ fix här
 import Page from "@/components/sb/Page";
 
 import Hero from "@/components/sb/Hero";
@@ -12,7 +13,7 @@ import AboutText from "@/components/sb/AboutText";
 import DoesNotExist from "@/components/sb/DoesNotExist";
 
 export const components = {
-  Page,
+  Page: Page,
   page: Page,
   ProductPage: ProductDetails,
   Layout: Page,
@@ -24,7 +25,6 @@ export const components = {
   latest_products_list: LatestProductsList,
   product_details: ProductDetails,
   about_text: AboutText,
-
 };
 
 let inited = false;
@@ -32,9 +32,11 @@ export function initStoryblok() {
   if (inited) return;
   storyblokInit({
     accessToken: process.env.NEXT_PUBLIC_STORYBLOK_DELIVERY_API_ACCESS_TOKEN,
-    use: [apiPlugin], 
+    use: [apiPlugin],
     apiOptions: { region: "eu" },
     components,
   });
   inited = true;
 }
+
+export { getStoryblokApi }; 

@@ -1,92 +1,57 @@
 import { getStoryblokApi } from "@storyblok/react/rsc";
-import { components, initStoryblok } from "@/lib/storyblok";
+import { initStoryblok, components } from "@/lib/storyblok";
 import { storyblokEditable } from "@storyblok/react";
-
-initStoryblok();
+import ProductDetails from "@/components/sb/ProductDetails";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const dynamicParams = true;
 
-// 🔎 Bygger statiska sidor utifrån Storyblok
-export async function generateStaticParams() {
+export default async function Page({ params }) {
+  initStoryblok();
+
+  const slug = params?.slug?.join("/") || "home";
   const storyblokApi = getStoryblokApi();
-  const { data } = await storyblokApi.get("cdn/links/", {
-    version: "published",
-  });
+  let data;
 
-  const links = Object.values(data.links);
-
-  const params = links
-    .filter((link) => {
-      if (link.is_folder) return false;
-      if (!link.slug) return false;
-
-      // 🚫 Släng bort allt relaterat till not-found
-      const excluded = ["config", "home", "not-found", "_not-found"];
-      if (excluded.includes(link.slug)) return false;
-      if (link.slug.includes("not-found")) return false;
-
-      return true;
-    })
-    .map((link) => ({
-      slug: link.slug.split("/"),
-    }));
-
-  console.log("✅ Static params:", params);
-  return params;
-}
-
-// 🔎 Dynamisk sida
-export default async function Page({ params: { slug }, searchParams }) {
   try {
-    const realSlug = slug?.join("/") || "home";
-    console.log("👉 Laddar slug:", realSlug);
-
-    const isPreview =
-      process.env.NODE_ENV === "development" ||
-      searchParams?.storyblok === "1" ||
-      searchParams?.storyblok_preview === "1";
-
-    const storyblokApi = getStoryblokApi();
-    const { data } = await storyblokApi.get(`cdn/stories/${realSlug}`, {
-      version: isPreview ? "draft" : "published",
+    const res = await storyblokApi.get(`cdn/stories/${slug}`, {
+      version: "published",
     });
-
-    console.log("📦 Story data:", data?.story?.name || "Ingen story hittades");
-
-    const blok = data?.story?.content;
-    if (!blok) {
-      console.warn("⚠️ Ingen content hittades för slug:", realSlug);
-      return (
-        <main className="p-8 text-center">
-          <h1>Innehåll saknas</h1>
-        </main>
-      );
-    }
-
-    const Component = components[blok.component];
-    if (!Component) {
-      console.warn("⚠️ Okänd komponent:", blok.component);
-      return (
-        <main className="p-8 text-center">
-          <h1>Okänd komponent: {blok.component}</h1>
-        </main>
-      );
-    }
-
+    data = res.data;
+  } catch (err) {
+    console.error("💥 Storyblok error:", err);
     return (
-      <main {...storyblokEditable(blok)}>
-        <Component blok={blok} />
-      </main>
-    );
-  } catch (error) {
-    console.error("💥 Storyblok error:", error);
-    return (
-      <main className="p-8 text-center">
-        <h1>Kunde inte ladda sidan</h1>
-        <p>{error.message}</p>
+      <main className="p-12 text-center">
+        <h1 className="text-2xl font-bold">404 – Innehållet hittades inte</h1>
+        <p>{slug}</p>
       </main>
     );
   }
+
+  const blok = data?.story?.content;
+  if (!blok) {
+    return (
+      <main className="p-12 text-center">
+        <h1>Ingen content hittades</h1>
+      </main>
+    );
+  }
+
+  // Om det är en produkt-sida → använd ProductDetails
+  if (blok.component === "ProductPage") {
+    return (
+      <main {...storyblokEditable(blok)} className="max-w-4xl mx-auto p-6">
+        <ProductDetails blok={blok} />
+      </main>
+    );
+  }
+
+  // Annars: dynamiska komponenter
+  const Component = components[blok.component] || (() => <p>Unknown component</p>);
+
+  return (
+    <main {...storyblokEditable(blok)} className="max-w-4xl mx-auto p-6">
+      <Component blok={blok} />
+    </main>
+  );
 }
+
