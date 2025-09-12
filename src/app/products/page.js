@@ -5,7 +5,18 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export default async function ProductsPage() {
+const getPlainText = (richText) => {
+  if (!richText || !richText.content) return "";
+  return richText.content
+    .map((node) =>
+      node.type === "paragraph"
+        ? node.content?.map((n) => n.text).join("") || ""
+        : ""
+    )
+    .join(" ");
+};
+
+export default async function ProductsPage({ searchParams }) {
   initStoryblok();
 
   const storyblokApi = getStoryblokApi();
@@ -21,21 +32,34 @@ export default async function ProductsPage() {
     starts_with: "products/",
   });
 
-  const products = (productData.stories || []).filter((product) => {
-  const slug = product.slug;
-  const fullSlug = product.full_slug;
+  const allProducts = (productData.stories || []).filter(
+    (p) => p.slug !== "products" && p.full_slug !== "products"
+  );
 
-  return slug !== "products" && fullSlug !== "products" && fullSlug !== "products/";
-});
+  const query = searchParams?.search?.toLowerCase() || "";
 
-
+  const filteredProducts = allProducts.filter((product) => {
+    const title = product.content.title?.toLowerCase() || "";
+    const description = getPlainText(product.content.description).toLowerCase();
+    return title.includes(query) || description.includes(query);
+  });
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-8 text-center">{pageTitle}</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">{pageTitle}</h1>
+
+      {query && (
+        <p className="text-center text-gray-500 mb-4">
+          Visar resultat för: <strong>{query}</strong>
+        </p>
+      )}
+
+      {filteredProducts.length === 0 && (
+        <p className="text-center text-gray-500">Inga produkter matchade din sökning.</p>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {products.map((product) => {
+        {filteredProducts.map((product) => {
           const { title, price, image } = product.content;
 
           return (

@@ -1,7 +1,23 @@
 "use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
+  const [query, setQuery] = useState("");
+  const router = useRouter();
+
+  const handleSearch = () => {
+    if (query.trim()) {
+      router.push(`/products?search=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleSearch();
+  };
+
   return (
     <header>
       {/* Main nav */}
@@ -29,7 +45,7 @@ export default function Header() {
                 <Link href="/about" className="hover:opacity-70">
                   About
                 </Link>
-              </li>  
+              </li>
             </ul>
           </nav>
 
@@ -40,24 +56,32 @@ export default function Header() {
               <input
                 type="text"
                 placeholder="Search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
                 className="h-[36px] w-[343px] rounded-md border border-gray-300 bg-white px-3 pr-9 text-sm placeholder:text-gray-400 focus:outline-none focus:border-gray-900"
               />
-              <svg
-                width="16"
-                height="16"
-                aria-hidden="true"
-                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
+              <button
+                type="button"
+                onClick={handleSearch}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m21 21-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z"
-                />
-              </svg>
+                <svg
+                  width="16"
+                  height="16"
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m21 21-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z"
+                  />
+                </svg>
+              </button>
             </label>
 
             {/* Cart */}
@@ -90,4 +114,3 @@ export default function Header() {
     </header>
   );
 }
-
