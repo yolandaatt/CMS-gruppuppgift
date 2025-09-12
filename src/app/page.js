@@ -2,6 +2,7 @@ import { getStoryblokApi } from "@storyblok/react/rsc";
 import { components, initStoryblok } from "@/lib/storyblok";
 import { storyblokEditable } from "@storyblok/react";
 
+
 export default async function Home() {
   initStoryblok();
 

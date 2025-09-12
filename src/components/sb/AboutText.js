@@ -1,6 +1,7 @@
 "use client";
 
-import { storyblokEditable, renderRichText } from "@storyblok/react/rsc";
+import { storyblokEditable } from "@storyblok/react/rsc";
+import { render } from "storyblok-rich-text-react-renderer";
 
 export default function AboutText({ blok }) {
   return (
@@ -13,10 +14,13 @@ export default function AboutText({ blok }) {
       )}
 
       {blok.text && (
-        <div
-          className="prose text-gray-700 mx-auto"
-          dangerouslySetInnerHTML={{ __html: renderRichText(blok.text) }}
-        />
+        <div className="prose max-w-none mb-6">
+          {render(blok.text, {
+            nodeResolvers: {
+              paragraph: (children) => <>{children}</>,
+            },
+          })}
+        </div>
       )}
     </section>
   );

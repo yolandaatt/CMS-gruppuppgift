@@ -2,12 +2,37 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { renderRichText } from "@storyblok/react";
+import { render } from "storyblok-rich-text-react-renderer";
+
+const InlineRichText = ({ document }) => {
+  if (!document) return null;
+
+  // Sträng? Visa direkt.
+  if (typeof document !== "object") return <>{document}</>;
+
+  // Tomt RichText? Visa inget.
+  if (Array.isArray(document?.content) && document.content.length === 0) {
+    return null;
+  }
+
+  // RichText → rendera utan <p>, behåll radbrytningar.
+  return render(document, {
+    nodeResolvers: {
+      paragraph: (children) => <>{children}</>,
+      hard_break: () => <br />,
+    },
+  });
+};
 
 export default function ProductDetails({ blok }) {
+  const hasDescription =
+    (typeof blok.description === "string" && blok.description.trim() !== "") ||
+    (typeof blok.description === "object" &&
+      Array.isArray(blok.description?.content) &&
+      blok.description.content.length > 0);
+
   return (
     <div className="bg-white shadow-lg rounded-2xl p-8 flex flex-col md:flex-row gap-8">
-
       {blok.image?.filename ? (
         <div className="flex-shrink-0 w-full md:w-1/2">
           <Image
@@ -30,14 +55,10 @@ export default function ProductDetails({ blok }) {
           {blok.price} kr
         </p>
 
-
-        {blok.description && (
-          <div
-            className="prose max-w-none mb-6"
-            dangerouslySetInnerHTML={{
-              __html: renderRichText(blok.description),
-            }}
-          />
+        {hasDescription && (
+          <div className="prose max-w-none mb-6">
+            <InlineRichText document={blok.description} />
+          </div>
         )}
 
         <div className="flex flex-col gap-3 mt-auto">

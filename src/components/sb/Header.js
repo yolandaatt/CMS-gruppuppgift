@@ -9,8 +9,13 @@ export default function Header() {
   const router = useRouter();
 
   const handleSearch = () => {
-    if (query.trim()) {
-      router.push(`/products?search=${encodeURIComponent(query.trim())}`);
+    const trimmed = query.trim();
+
+
+    if (trimmed === "") {
+      router.push("/products");
+    } else {
+      router.push(`/products?search=${encodeURIComponent(trimmed)}`);
     }
   };
 
@@ -83,34 +88,10 @@ export default function Header() {
                 </svg>
               </button>
             </label>
-
-            {/* Cart */}
-            <button
-              aria-label="Cart"
-              className="relative inline-flex items-center"
-            >
-              <svg
-                width="20"
-                height="20"
-                aria-hidden="true"
-                className="text-gray-800"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 3h2l.6 3M7 13h10l3-8H6.2M7 13 6 18h12M7 21h.01M17 21h.01"
-                />
-              </svg>
-              <span className="absolute -top-2 -right-2 grid h-5 w-5 place-items-center rounded-full bg-black text-[11px] text-white">
-              </span>
-            </button>
           </div>
         </div>
       </div>
     </header>
   );
 }
+

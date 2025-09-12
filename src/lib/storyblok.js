@@ -1,7 +1,8 @@
 import { storyblokInit, apiPlugin } from "@storyblok/react/rsc";
 import { getStoryblokApi } from "@storyblok/react";
-import Page from "@/components/sb/Page";
 
+// Importera bara de komponenter du faktiskt använder
+import Page from "@/components/sb/Page";
 import Hero from "@/components/sb/Hero";
 import NavItem from "@/components/sb/NavItem";
 import ImageBanner from "@/components/sb/ImageBanner";
@@ -28,15 +29,18 @@ export const components = {
 };
 
 let inited = false;
+
 export function initStoryblok() {
   if (inited) return;
+
   storyblokInit({
     accessToken: process.env.NEXT_PUBLIC_STORYBLOK_DELIVERY_API_ACCESS_TOKEN,
     use: [apiPlugin],
     apiOptions: { region: "eu" },
     components,
   });
+
   inited = true;
 }
 
-export { getStoryblokApi }; 
+export { getStoryblokApi };

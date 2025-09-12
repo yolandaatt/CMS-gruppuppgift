@@ -85,7 +85,7 @@ export default function LatestProductsList({ blok }) {
             )}
             <Link
               href={`/${story.full_slug}`}
-              className="text-blue-500 hover:underline"
+              className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg text-sm"
             >
               Läs mer →
             </Link>

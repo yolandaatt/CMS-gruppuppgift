@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-  "dev": "set NEXT_DISABLE_TURBOPACK=1 && next dev",
-  "build": "next build",
-  "start": "next start",
-  "proxy": "local-ssl-proxy --source 3010 --target 3000 --cert localhost.pem --key localhost-key.pem",
-  "start:secure": "concurrently -n dev,proxy -c blue,gray \"npm run dev\" \"npm run proxy || echo 'Proxy not running'\""
-},
+    "dev": "set NEXT_DISABLE_TURBOPACK=1 && next dev",
+    "build": "next build",
+    "start": "next start",
+    "proxy": "local-ssl-proxy --source 3010 --target 3000 --cert localhost.pem --key localhost-key.pem",
+    "start:secure": "concurrently -n dev,proxy -c blue,gray \"npm run dev\" \"npm run proxy || echo 'Proxy not running'\""
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",
     "@tailwindcss/typography": "^0.5.16",
@@ -21,6 +21,7 @@
     "@storyblok/react": "^5.4.11",
     "next": "^15.5.3",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "storyblok-rich-text-react-renderer": "^3.0.1"
   }
 }

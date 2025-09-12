@@ -1,6 +1,7 @@
 "use client";
 
-import { storyblokEditable, renderRichText } from "@storyblok/react";
+import { storyblokEditable } from "@storyblok/react";
+import { render } from "storyblok-rich-text-react-renderer";
 
 export default function Hero({ blok }) {
   const bgColor = blok.background_color?.color || "transparent";
@@ -13,8 +14,7 @@ export default function Hero({ blok }) {
       ? "items-end text-right"
       : "items-center text-center";
 
-  const hasContent =
-    blok.subtitle?.content && blok.subtitle.content.length > 0;
+  const hasContent = blok.subtitle?.content && blok.subtitle.content.length > 0;
 
   return (
     <section
@@ -22,14 +22,23 @@ export default function Hero({ blok }) {
       className={`py-20 px-4 md:px-8 flex justify-center`}
       style={{ backgroundColor: bgColor }}
     >
-      <div className={`flex flex-col gap-4 max-w-4xl ${alignment} ${textColor}`}>
-        {blok.title && <h1 className="text-4xl font-extrabold">{blok.title}</h1>}
+      <div
+        className={`flex flex-col gap-4 max-w-4xl ${alignment} ${textColor}`}
+      >
+        {blok.title && (
+          <h1 className="text-4xl font-extrabold">{blok.title}</h1>
+        )}
 
         {hasContent && (
-          <div
-            className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: renderRichText(blok.subtitle) }}
-          />
+          <div className="prose max-w-none mb-6">
+            {blok.subtitle && typeof blok.subtitle === "object"
+              ? render(blok.subtitle, {
+                  nodeResolvers: {
+                    paragraph: (children) => <>{children}</>, 
+                  },
+                })
+              : blok.subtitle}
+          </div>
         )}
 
         {blok.media?.filename && (
